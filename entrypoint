@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -e
+
+trap 'rm -f "$FILE"' EXIT
+
+read_stdin() {
+  FILE=$(mktemp)
+  cat > "$FILE"
+}
+
+case "$1" in
+  sadf)
+    read_stdin
+    exec "$@" "$FILE"
+    ;;
+  sar)
+    read_stdin
+    exec "$@" -f "$FILE"
+    ;;
+  daemon)
+    exec tail -f /dev/null
+    ;;
+  *)
+    exec "$@"
+esac
