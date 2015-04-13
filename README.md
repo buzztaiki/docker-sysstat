@@ -16,13 +16,21 @@ Read CentOS6 sar data file with sar.
 $ docker run -i --rm buzztaiki/sysstat:centos6 sar -A < centos6.sa1
 ````
 
-You can use `centos5`, `centos6`, `centos7` tag for reading sar data file.
+Use `centos5`, `centos6`, `centos7` tag for reading sar data file.
 
 ````console
 $ docker run -i --rm buzztaiki/sysstat:centos5 sar -A < centos5.sa1
 $ docker run -i --rm buzztaiki/sysstat:centos6 sar -A < centos6.sa1
 $ docker run -i --rm buzztaiki/sysstat:centos7 sar -A < centos7.sa1
 ````
+
+Show man page of sar and sadf.
+
+````
+$ docker run -it --rm buzztaiki/sysstat:centos6 man sar
+$ docker run -it --rm buzztaiki/sysstat:centos6 man sadf
+````
+
 
 ## Daemon mode
 
