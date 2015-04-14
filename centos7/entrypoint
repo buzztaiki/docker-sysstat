@@ -1,22 +1,35 @@
 #!/bin/bash
 
 set -e
-trap 'rm -f "$FILE"' EXIT
-
 ARGV=("$@")
 
 read_stdin() {
-  FILE=$(mktemp)
+  FILE=$(mktemp -p /tmp docker-sysstat.XXXXXXXXXX)
   cat > "$FILE"
 }
 
 has_option() {
+  local x y
   for x in "${ARGV[@]}"; do
     for y in "$@"; do
       [ "$x" = "$y" ] && return 0
     done
   done
   return 1
+}
+
+watchdog() {
+  local interval="$1"
+  local now f
+  while true; do
+    sleep "$interval"
+    now="$(date +%s)"
+    find /tmp -maxdepth 1 -name 'docker-sysstat.*' | while read f; do
+      if (( "$now" - "$(stat -c %Y "$f")" > "$interval" )); then
+        rm "$f"
+      fi
+    done
+  done
 }
 
 case "$1" in
@@ -33,7 +46,8 @@ case "$1" in
     exec "$@" -f "$FILE"
     ;;
   daemon)
-    exec tail -f /dev/null
+    interval="$2"
+    watchdog ${interval:-60}
     ;;
   *)
     exec "$@"
