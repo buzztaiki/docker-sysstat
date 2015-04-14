@@ -47,3 +47,8 @@ And run `/entrypoint` command using `docker exec`.
 ````console
 $ docker exec -i sysstat-centos6 /entrypoint sadf -- -A < centos6.sa1
 ````
+
+
+## License
+
+[MIT](LICENSE)
